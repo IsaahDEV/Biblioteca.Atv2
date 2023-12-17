@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Editoras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Formulário para cadastrar editoras -->
+    <div>
+        <h2>Cadastrar Editora</h2>
+        <form id="editoraForm">
+            <label for="nomeEditora">Nome:</label>
+            <input type="text" id="nomeEditora" required>
+
+            <label for="enderecoEditora">Endereço:</label>
+            <input type="text" id="enderecoEditora" required>
+
+            <button type="button" onclick="cadastrarEditora()">Cadastrar</button>
+        </form>
+    </div>
+
+    <!-- Lista de editoras -->
+    <div>
+        <h2>Lista de Editoras</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Endereço</th>
+                    <!-- Adicione outras colunas conforme necessário -->
+                </tr>
+            </thead>
+            <tbody id="editorasList"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Função para cadastrar uma editora
+        function cadastrarEditora() {
+            const editoraForm = document.getElementById('editoraForm');
+            const nomeEditora = document.getElementById('nomeEditora').value;
+            const enderecoEditora = document.getElementById('enderecoEditora').value;
+
+            // Monta os dados da editora para enviar no corpo da requisição
+            const editoraData = {
+                nome: nomeEditora,
+                endereço: enderecoEditora
+            };
+
+            // Envia a requisição para o endpoint de Editoras (http://localhost:8080/editoras)
+            fetch('http://localhost:8080/editoras', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(editoraData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Editora cadastrada com sucesso:', data);
+                    // Atualiza a lista de editoras após o cadastro
+                    atualizarListaEditoras();
+                })
+                .catch(error => {
+                    console.error('Erro ao cadastrar editora:', error);
+                    // Lógica para lidar com erros, exibir mensagem, etc.
+                });
+        }
+
+        // Função para obter e exibir a lista de editoras
+        function atualizarListaEditoras() {
+            // Envia uma requisição para o endpoint de Editoras (http://localhost:8080/editoras) para obter a lista de editoras
+            fetch('http://localhost:8080/editoras')
+                .then(response => response.json())
+                .then(data => {
+                    // Atualiza a tabela com os dados obtidos
+                    const editorasList = document.getElementById('editorasList');
+                    editorasList.innerHTML = ''; // Limpa a lista antes de atualizar
+
+                    // Adiciona as linhas com os dados das editoras
+                    data.forEach(editora => {
+                        const newRow = editorasList.insertRow();
+                        const cell1 = newRow.insertCell(0);
+                        const cell2 = newRow.insertCell(1);
+                        cell1.innerHTML = editora.nome;
+                        cell2.innerHTML = editora.endereco;
+                        // Adicione outras colunas conforme necessário
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao obter lista de editoras:', error);
+                    // Lógica para lidar com erros, exibir mensagem, etc.
+                });
+        }
+
+        // Chama a função para inicializar a lista de editoras
+        atualizarListaEditoras();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Reservas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Formulário para cadastrar reservas -->
+    <div>
+        <h2>Cadastrar Reserva</h2>
+        <form id="reservaForm">
+            <label for="idUsuario">ID do Usuário:</label>
+            <input type="text" id="idUsuario" required>
+
+            <label for="dataReserva">Data da Reserva:</label>
+            <input type="date" id="dataReserva" required>
+
+            <button type="button" onclick="cadastrarReserva()">Cadastrar</button>
+        </form>
+    </div>
+
+    <!-- Lista de reservas -->
+    <div>
+        <h2>Lista de Reservas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID do Usuário</th>
+                    <th>Data da Reserva</th>
+                    <!-- Adicione outras colunas conforme necessário -->
+                </tr>
+            </thead>
+            <tbody id="reservasList"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Função para cadastrar uma reserva
+        function cadastrarReserva() {
+            const reservaForm = document.getElementById('reservaForm');
+            const idUsuario = document.getElementById('idUsuario').value;
+            const dataReserva = document.getElementById('dataReserva').value;
+
+            // Monta os dados da reserva para enviar no corpo da requisição
+            const reservaData = {
+                idUsuario: idUsuario,
+                dataReserva: dataReserva
+            };
+
+            // Envia a requisição para o endpoint de Reservas (http://localhost:8080/reservas)
+            fetch('http://localhost:8080/reservas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reservaData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Reserva cadastrada com sucesso:', data);
+                    // Atualiza a lista de reservas após o cadastro
+                    atualizarListaReservas();
+                })
+                .catch(error => {
+                    console.error('Erro ao cadastrar reserva:', error);
+                    // Lógica para lidar com erros, exibir mensagem, etc.
+                });
+        }
+
+        // Função para obter e exibir a lista de reservas
+        function atualizarListaReservas() {
+            // Envia uma requisição para o endpoint de Reservas (http://localhost:8080/reservas) para obter a lista de reservas
+            fetch('http://localhost:8080/reservas')
+                .then(response => response.json())
+                .then(data => {
+                    // Atualiza a tabela com os dados obtidos
+                    const reservasList = document.getElementById('reservasList');
+                    reservasList.innerHTML = ''; // Limpa a lista antes de atualizar
+
+                    // Adiciona as linhas com os dados das reservas
+                    data.forEach(reserva => {
+                        const newRow = reservasList.insertRow();
+                        const cell1 = newRow.insertCell(0);
+                        const cell2 = newRow.insertCell(1);
+                        cell1.innerHTML = reserva.idUsuario;
+                        cell2.innerHTML = reserva.dataReserva;
+                        // Adicione outras colunas conforme necessário
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao obter lista de reservas:', error);
+                    // Lógica para lidar com erros, exibir mensagem, etc.
+                });
+        }
+
+        // Chama a função para inicializar a lista de reservas
+        atualizarListaReservas();
+    </script>
+
+</body>
+
+</html>

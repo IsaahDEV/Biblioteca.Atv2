@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend para Consumir Endpoints</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Autor Form -->
+    <form id="autorForm">
+        <h2>Cadastrar Autor</h2>
+        <label for="nomeAutor">Nome do Autor:</label>
+        <input type="text" id="nomeAutor" required>
+        <label for="nacionalidade">Nacionalidade:</label>
+        <input type="text" id="nacionalidade" required>
+        <button type="button" onclick="cadastrarAutor()">Cadastrar Autor</button>
+    </form>
+
+    <!-- Lista de Autores -->
+    <h2>Lista de Autores</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome do Autor</th>
+                <th>Nacionalidade</th>
+            </tr>
+        </thead>
+        <tbody id="autoresList">
+            <!-- A lista de autores será exibida aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        // Função para cadastrar um autor
+        function cadastrarAutor() {
+            const autorForm = document.getElementById('autorForm');
+            const nomeAutor = document.getElementById('nomeAutor').value;
+            const nacionalidade = document.getElementById('nacionalidade').value;
+    
+            // Monta os dados do autor para enviar no corpo da requisição
+            const autorData = {
+                nome: nomeAutor,
+                nacionalidade: nacionalidade
+            };
+    
+            // Envia a requisição para o endpoint de Autores (http://localhost:8080/autores)
+            fetch('http://localhost:8080/autores', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(autorData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Autor cadastrado com sucesso:', data);
+                // Atualiza a lista de autores após o cadastro
+                atualizarListaAutores();
+            })
+            .catch(error => {
+                console.error('Erro ao cadastrar autor:', error);
+                // Lógica para lidar com erros, exibir mensagem, etc.
+            });
+        }
+    
+        // Função para obter e exibir a lista de autores
+        function atualizarListaAutores() {
+            // Envia uma requisição para o endpoint de Autores (http://localhost:8080/autores) para obter a lista de autores
+            fetch('http://localhost:8080/autores')
+            .then(response => response.json())
+            .then(data => {
+                // Atualiza a tabela com os dados obtidos
+                const autoresList = document.getElementById('autoresList');
+                autoresList.innerHTML = ''; // Limpa a lista antes de atualizar
+    
+                // Adiciona as linhas com os dados dos autores
+                data.forEach(autor => {
+                    const newRow = autoresList.insertRow();
+                    const cell1 = newRow.insertCell(0);
+                    const cell2 = newRow.insertCell(1);
+                    cell1.innerHTML = autor.nome;
+                    cell2.innerHTML = autor.nacionalidade;
+                    // Adicione outras colunas conforme necessário
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao obter lista de autores:', error);
+                // Lógica para lidar com erros, exibir mensagem, etc.
+            });
+        }
+    
+        // Chama a função para inicializar a lista de autores
+        atualizarListaAutores();
+    </script>
+    
+
+</body>
+</html>

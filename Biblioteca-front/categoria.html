@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Categorias</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Formulário para cadastrar categorias -->
+    <div>
+        <h2>Cadastrar Categoria</h2>
+        <form id="categoriaForm">
+            <label for="nomeCategoria">Nome:</label>
+            <input type="text" id="nomeCategoria" required>
+
+            <label for="descricaoCategoria">Descrição:</label>
+            <input type="text" id="descricaoCategoria" required>
+
+            <button type="button" onclick="cadastrarCategoria()">Cadastrar</button>
+        </form>
+    </div>
+
+    <!-- Lista de categorias -->
+    <div>
+        <h2>Lista de Categorias</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <!-- Adicione outras colunas conforme necessário -->
+                </tr>
+            </thead>
+            <tbody id="categoriasList"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Função para cadastrar uma categoria
+        function cadastrarCategoria() {
+            const categoriaForm = document.getElementById('categoriaForm');
+            const nomeCategoria = document.getElementById('nomeCategoria').value;
+            const descricaoCategoria = document.getElementById('descricaoCategoria').value;
+
+            // Monta os dados da categoria para enviar no corpo da requisição
+            const categoriaData = {
+                nome: nomeCategoria,
+                descricao: descricaoCategoria
+            };
+
+            // Envia a requisição para o endpoint de Categorias (http://localhost:8080/categorias)
+            fetch('http://localhost:8080/categorias', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(categoriaData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Categoria cadastrada com sucesso:', data);
+                    // Atualiza a lista de categorias após o cadastro
+                    atualizarListaCategorias();
+                })
+                .catch(error => {
+                    console.error('Erro ao cadastrar categoria:', error);
+                    // Lógica para lidar com erros, exibir mensagem, etc.
+                });
+        }
+
+        // Função para obter e exibir a lista de categorias
+        function atualizarListaCategorias() {
+            // Envia uma requisição para o endpoint de Categorias (http://localhost:8080/categorias) para obter a lista de categorias
+            fetch('http://localhost:8080/categorias')
+                .then(response => response.json())
+                .then(data => {
+                    // Atualiza a tabela com os dados obtidos
+                    const categoriasList = document.getElementById('categoriasList');
+                    categoriasList.innerHTML = ''; // Limpa a lista antes de atualizar
+
+                    // Adiciona as linhas com os dados das categorias
+                    data.forEach(categoria => {
+                        const newRow = categoriasList.insertRow();
+                        const cell1 = newRow.insertCell(0);
+                        const cell2 = newRow.insertCell(1);
+                        cell1.innerHTML = categoria.nome;
+                        cell2.innerHTML = categoria.descricao;
+                        // Adicione outras colunas conforme necessário
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao obter lista de categorias:', error);
+                    // Lógica para lidar com erros, exibir mensagem, etc.
+                });
+        }
+
+        // Chama a função para inicializar a lista de categorias
+        atualizarListaCategorias();
+    </script>
+
+</body>
+
+</html>

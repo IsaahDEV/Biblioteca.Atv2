@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <title>Gerenciamento de Livros</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      h2 {
+        margin-bottom: 10px;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      .card {
+        width: 60%;
+        height: 70%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+        <a href="./autor.html">Autor</a>
+    </nav>
+    <!-- Formulário para cadastrar livros -->
+    <div class="card">
+      <div class="card-body">
+        <h2>Cadastrar Livro</h2>
+        <form id="livroForm">
+          <div class="mb-3">
+            <div class="input-group">
+              <label for="titulo" class="form-label">Título:</label>
+              <input type="text" id="titulo" class="form-control" required />
+
+              <label for="isbn" class="form-label">ISBN:</label>
+              <input type="text" id="isbn" required class="form-control" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="input-group">
+              <label for="anoPublicado" class="form-label"
+                >Ano Publicado:</label
+              >
+              <input
+                type="number"
+                id="anoPublicado"
+                required
+                class="form-control"
+              />
+
+              <label for="idAutor" class="form-label">ID do Autor:</label>
+              <input type="number" id="idAutor" required class="form-control" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="input-group">
+              <label for="idEditora" class="form-label">ID da Editora:</label>
+              <input
+                type="number"
+                id="idEditora"
+                required
+                class="form-control"
+              />
+
+              <label for="idCategoria" class="form-label"
+                >ID da Categoria:</label
+              >
+              <input
+                type="number"
+                id="idCategoria"
+                required
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="input-group">
+              <label for="idAvaliacoes" class="form-label"
+                >ID das Avaliações:</label
+              >
+              <input
+                type="number"
+                id="idAvaliacoes"
+                required
+                class="form-control"
+              />
+
+              <label for="idReserva" class="form-label">ID da Reserva:</label>
+              <input
+                type="number"
+                id="idReserva"
+                required
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <button type="button" onclick="cadastrarLivro()">Cadastrar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lista de livros -->
+    <div>
+      <h2>Lista de Livros</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>ISBN</th>
+            <th>Ano Publicado</th>
+            <th>Nome do Autor</th>
+            <th>Nome da Editora</th>
+            <th>Nome da Categoria</th>
+            <th>Avaliações</th>
+            <th>Numero da Reserva</th>
+            <!-- Adicione outras colunas conforme necessário -->
+          </tr>
+        </thead>
+        <tbody id="livrosList"></tbody>
+      </table>
+    </div>
+
+    <script>
+      // Função para cadastrar um livro
+      function cadastrarLivro() {
+        const livroForm = document.getElementById("livroForm");
+        const titulo = document.getElementById("titulo").value;
+        const isbn = document.getElementById("isbn").value;
+        const anoPublicado = document.getElementById("anoPublicado").value;
+        const idAutor = document.getElementById("idAutor").value;
+        const idEditora = document.getElementById("idEditora").value;
+        const idCategoria = document.getElementById("idCategoria").value;
+        const idAvaliacoes = document.getElementById("idAvaliacoes").value;
+        const idReserva = document.getElementById("idReserva").value;
+
+        // Monta os dados do livro para enviar no corpo da requisição
+        const livroData = {
+          titulo: titulo,
+          isbn: isbn,
+          anoPublicado: anoPublicado,
+          idAutor: idAutor,
+          idEditora: idEditora,
+          idCategoria: idCategoria,
+          idAvaliacoes: idAvaliacoes,
+          idReserva: idReserva,
+        };
+
+        // Envia a requisição para o endpoint de Livros (http://localhost:8080/livros)
+        fetch("http://localhost:8080/livros", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(livroData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Livro cadastrado com sucesso:", data);
+            // Atualiza a lista de livros após o cadastro
+            atualizarListaLivros();
+          })
+          .catch((error) => {
+            console.error("Erro ao cadastrar livro:", error);
+            // Lógica para lidar com erros, exibir mensagem, etc.
+          });
+      }
+
+      // Função para obter e exibir a lista de livros
+      function atualizarListaLivros() {
+        // Envia uma requisição para o endpoint de Livros (http://localhost:8080/livros) para obter a lista de livros
+        fetch("http://localhost:8080/livros")
+          .then((response) => response.json())
+          .then((data) => {
+            // Atualiza a tabela com os dados obtidos
+            const livrosList = document.getElementById("livrosList");
+            livrosList.innerHTML = ""; // Limpa a lista antes de atualizar
+
+            // Adiciona as linhas com os dados dos livros
+            data.forEach((livro) => {
+              const newRow = livrosList.insertRow();
+              const cell1 = newRow.insertCell(0);
+              const cell2 = newRow.insertCell(1);
+              const cell3 = newRow.insertCell(2);
+              const cell4 = newRow.insertCell(3);
+              const cell5 = newRow.insertCell(4);
+              const cell6 = newRow.insertCell(5);
+              const cell7 = newRow.insertCell(6);
+              const cell8 = newRow.insertCell(7);
+
+              cell1.innerHTML = livro.titulo;
+              cell2.innerHTML = livro.isbn;
+              cell3.innerHTML = livro.anoPublicado;
+              cell4.innerHTML = livro.autor.nome;
+              cell5.innerHTML = livro.editora.nome;
+              cell6.innerHTML = livro.categoria.nome;
+              cell7.innerHTML = livro.avaliacao.classificacao;
+              cell8.innerHTML = livro.idReserva;
+              // Adicione outras colunas conforme necessário
+            });
+          })
+          .catch((error) => {
+            console.error("Erro ao obter lista de livros:", error);
+            // Lógica para lidar com erros, exibir mensagem, etc.
+          });
+      }
+
+      // Chama a função para inicializar a lista de livros
+      atualizarListaLivros();
+    </script>
+  </body>
+</html>

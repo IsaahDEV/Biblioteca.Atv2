@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Avaliações</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Formulário para cadastrar avaliações -->
+    <div>
+        <h2>Cadastrar Avaliação</h2>
+        <form id="avaliacaoForm">
+            <label for="classificacao">Classificação:</label>
+            <input type="number" id="classificacao" min="1" max="5" required>
+
+            <label for="comentarios">Comentários:</label>
+            <textarea id="comentarios" required></textarea>
+
+            <label for="idUsuario">ID do Usuário:</label>
+            <input type="text" id="idUsuario" required>
+
+            <button type="button" onclick="cadastrarAvaliacao()">Cadastrar</button>
+        </form>
+    </div>
+
+    <!-- Lista de avaliações -->
+    <div>
+        <h2>Lista de Avaliações</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Classificação</th>
+                    <th>Comentários</th>
+                    <th>ID do Usuário</th>
+                    <!-- Adicione outras colunas conforme necessário -->
+                </tr>
+            </thead>
+            <tbody id="avaliacoesList"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Função para cadastrar uma avaliação
+        function cadastrarAvaliacao() {
+            const avaliacaoForm = document.getElementById('avaliacaoForm');
+            const classificacao = document.getElementById('classificacao').value;
+            const comentarios = document.getElementById('comentarios').value;
+            const idUsuario = document.getElementById('idUsuario').value;
+
+            // Monta os dados da avaliação para enviar no corpo da requisição
+            const avaliacaoData = {
+                classificacao: classificacao,
+                comentarios: comentarios,
+                idUsuario: idUsuario
+            };
+
+            // Envia a requisição para o endpoint de Avaliações (http://localhost:8080/avaliacoes)
+            fetch('http://localhost:8080/avaliacoes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(avaliacaoData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Avaliação cadastrada com sucesso:', data);
+                    // Atualiza a lista de avaliações após o cadastro
+                    atualizarListaAvaliacoes();
+                })
+                .catch(error => {
+                    console.error('Erro ao cadastrar avaliação:', error);
+                    // Lógica para lidar com erros, exibir mensagem, etc.
+                });
+        }
+
+        // Função para obter e exibir a lista de avaliações
+        function atualizarListaAvaliacoes() {
+            // Envia uma requisição para o endpoint de Avaliações (http://localhost:8080/avaliacoes) para obter a lista de avaliações
+            fetch('http://localhost:8080/avaliacoes')
+                .then(response => response.json())
+                .then(data => {
+                    // Atualiza a tabela com os dados obtidos
+                    const avaliacoesList = document.getElementById('avaliacoesList');
+                    avaliacoesList.innerHTML = ''; // Limpa a lista antes de atualizar
+
+                    // Adiciona as linhas com os dados das avaliações
+                    data.forEach(avaliacao => {
+                        const newRow = avaliacoesList.insertRow();
+                        const cell1 = newRow.insertCell(0);
+                        const cell2 = newRow.insertCell(1);
+                        const cell3 = newRow.insertCell(2);
+                        cell1.innerHTML = avaliacao.classificacao;
+                        cell2.innerHTML = avaliacao.comentarios;
+                        cell3.innerHTML = avaliacao.idUsuario;
+                        // Adicione outras colunas conforme necessário
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao obter lista de avaliações:', error);
+                    // Lógica para lidar com erros, exibir mensagem, etc.
+                });
+        }
+
+        // Chama a função para inicializar a lista de avaliações
+        atualizarListaAvaliacoes();
+    </script>
+
+</body>
+
+</html>
