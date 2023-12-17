@@ -6,22 +6,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 @Entity
 public class Editora implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idEditora;
+    private int idEditora;
     private String nome;
     private String endereço;
 
-    public UUID getIdEditora() {
+    public int getIdEditora() {
         return idEditora;
     }
 
-    public void setIdEditora(UUID idEditora) {
+    public void setIdEditora(int idEditora) {
         this.idEditora = idEditora;
     }
 

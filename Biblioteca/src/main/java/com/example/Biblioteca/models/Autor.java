@@ -1,29 +1,30 @@
 package com.example.Biblioteca.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.UUID;
+
 
 @Entity
-
+@Table(name = "TB_AUTOR")
 public class Autor implements Serializable {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idtAutor;
+    private int idtAutor;
     private String nome;
-    private String nascionalidade;
+    private String nacionalidade;
 
-    public UUID getIdtAutor() {
+
+
+
+
+    public int getIdtAutor() {
         return idtAutor;
     }
 
-    public void setIdtAutor(UUID idtAutor) {
+    public void setIdtAutor(int idtAutor) {
         this.idtAutor = idtAutor;
     }
 
@@ -35,11 +36,11 @@ public class Autor implements Serializable {
         this.nome = nome;
     }
 
-    public String getNascionalidade() {
-        return nascionalidade;
+    public String getNacionalidade() {
+        return nacionalidade;
     }
 
-    public void setNascionalidade(String nascionalidade) {
-        this.nascionalidade = nascionalidade;
+    public void setNacionalidade(String nacionalidade) {
+        this.nacionalidade = nacionalidade;
     }
 }

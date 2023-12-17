@@ -1,27 +1,26 @@
 package com.example.Biblioteca.models;
 
 import jakarta.persistence.*;
-
 import java.io.Serializable;
-import java.util.Date;
-import java.util.UUID;
-
 @Entity
-public class Reservas  implements Serializable {
+@Table(name = "TB_RESERVAS")
+public class Reservas implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idReservas;
-     @ManyToOne
-     private Usuario usuario;
-     @ManyToOne
-     private Livro livro;
-     private Date dataReserva;
+    private int idReservas;
 
-    public UUID getIdReservas() {
+    @ManyToOne
+    private Usuario usuario;
+
+    private Integer idUsuario;
+
+    private String dataReserva;
+
+    public int getIdReservas() {
         return idReservas;
     }
 
-    public void setIdReservas(UUID idReservas) {
+    public void setIdReservas(int idReservas) {
         this.idReservas = idReservas;
     }
 
@@ -33,19 +32,19 @@ public class Reservas  implements Serializable {
         this.usuario = usuario;
     }
 
-    public Livro getLivro() {
-        return livro;
-    }
-
-    public void setLivro(Livro livro) {
-        this.livro = livro;
-    }
-
-    public Date getDataReserva() {
+    public String getDataReserva() {
         return dataReserva;
     }
 
-    public void setDataReserva(Date dataReserva) {
+    public void setDataReserva(String dataReserva) {
         this.dataReserva = dataReserva;
+    }
+
+    public Integer getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
     }
 }

@@ -3,27 +3,27 @@ package com.example.Biblioteca.models;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 @Entity
+@Table(name = "TB_AVALIACOES")
 public class Avaliacoes implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idAvaliacoes;
+    private int idAvaliacoes;
 
     @ManyToOne
     private Usuario usuario;
-    @ManyToOne
-    private Livro livro;
+
+    private Integer idUsuario;
 
     private int classificacao;
     private String comentarios;
 
-    public UUID getIdAvaliacoes() {
+    public int getIdAvaliacoes() {
         return idAvaliacoes;
     }
 
-    public void setIdAvaliacoes(UUID idAvaliacoes) {
+    public void setIdAvaliacoes(int idAvaliacoes) {
         this.idAvaliacoes = idAvaliacoes;
     }
 
@@ -35,13 +35,6 @@ public class Avaliacoes implements Serializable {
         this.usuario = usuario;
     }
 
-    public Livro getLivro() {
-        return livro;
-    }
-
-    public void setLivro(Livro livro) {
-        this.livro = livro;
-    }
 
     public int getClassificacao() {
         return classificacao;
@@ -58,4 +51,13 @@ public class Avaliacoes implements Serializable {
     public void setComentarios(String comentarios) {
         this.comentarios = comentarios;
     }
+
+    public Integer getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
 }

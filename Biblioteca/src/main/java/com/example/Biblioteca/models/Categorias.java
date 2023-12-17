@@ -6,21 +6,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 @Entity
 public class Categorias implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idCategorias;
+    private int idCategorias;
     private String nome;
     private String descricao;
 
-    public UUID getIdCategorias() {
+    public int getIdCategorias() {
         return idCategorias;
     }
 
-    public void setIdCategorias(UUID idCategorias) {
+    public void setIdCategorias(int idCategorias) {
         this.idCategorias = idCategorias;
     }
 

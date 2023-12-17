@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.UUID;
 
 
 
@@ -13,7 +12,7 @@ import java.util.UUID;
 public class Emprestimos  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idEmprestimos;
+    private int idEmprestimos;
 
     @ManyToOne
     private Usuario usuario;
@@ -24,11 +23,11 @@ public class Emprestimos  implements Serializable {
     private Date dataEmprestimos;
     private Date dataDevolicao;
 
-    public UUID getIdEmprestimos() {
+    public int getIdEmprestimos() {
         return idEmprestimos;
     }
 
-    public void setIdEmprestimos(UUID idEmprestimos) {
+    public void setIdEmprestimos(int idEmprestimos) {
         this.idEmprestimos = idEmprestimos;
     }
 

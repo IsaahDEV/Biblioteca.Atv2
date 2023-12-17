@@ -1,6 +1,17 @@
 package com.example.Biblioteca.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-public record LivroRecordDto(@NotBlank String titulo, @NotBlank String isbn, @NotBlank int anoPublicado) {
-}
+import java.util.Optional;
+import java.util.Set;
+public record LivroRecordDto(
+        @NotNull String titulo,
+        @NotNull String isbn,
+        @NotNull Integer anoPublicacao,
+        int idAutor,
+        int idEditora,
+        int idCategoria,
+        int idAvaliacoes,
+        int idReserva
+) {}

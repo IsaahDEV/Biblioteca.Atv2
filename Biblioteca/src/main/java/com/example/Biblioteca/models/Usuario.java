@@ -1,28 +1,25 @@
 package com.example.Biblioteca.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 @Entity
+@Table(name = "TB_usuario")
 public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
-    private UUID idUsuario;
+    private int idUsuario;
     private String nome;
     private  String email;
     private String senha;
 
-    public UUID getIdUsuario() {
+    public int getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(UUID idUsuario) {
+    public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
 
